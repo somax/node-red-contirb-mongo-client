@@ -6,12 +6,17 @@ MongoDB client for Node-RED
 > Please refer to the [mongoDB node driver 'Collection' documentation](http://mongodb.github.io/node-mongodb-native/3.0/api/Collection.html) to read about each operation.
 
 
-Any INPUT will be passed to OUTPUT, and the extra will increase the following parameters:
+
 ```js
 {
+    // If the 'collectionName' is provided
+    collection
+    // otherwise
+    db,
+    // Any INPUT will be passed to OUTPUT, and the extra will increase the following parameters:
+    payload,
+    foo,
     ...
-    client,
-    collection // If the 'collectionName' is provided
 }
 
 ```
@@ -21,13 +26,11 @@ Any INPUT will be passed to OUTPUT, and the extra will increase the following pa
 if(msg.collection){
     msg.collection
         .countDocuments()
-        .then(r => node.send({ payload:r }) )
+        .then( r => node.send({ payload:r }) )
+}else if(msg.db){
+    msg.db.collection('collectionName')
+        .find()
+        .toArray()
+        .then( r => node.send({ payload:r }) )
 }
-
-// or
-
-msg.client.db('dbName').collection('collectionName')
-    .find()
-    .toArray()
-    .then(...)
 ```

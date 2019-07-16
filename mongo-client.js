@@ -47,7 +47,7 @@ module.exports = function (RED) {
         "promise": mongodb.MongoClient.connect(config.uri, config.options || {}).then(function (client) {
           const dbName = decodeURIComponent((config.uri.match(/^.*\/([^?]*)\??.*$/) || [])[1] || '');
           const db = client.db(dbName);
-          return client;
+          return {client,db};
         })
       };
     }
@@ -77,7 +77,7 @@ module.exports = function (RED) {
 
     RED.nodes.createNode(this, n);
     this.configNode = n.configNode;
-    this.collection = n.collection;
+    this.collectionName = n.collectionName;
 
     this.config = RED.nodes.getNode(this.configNode);
 
@@ -88,17 +88,19 @@ module.exports = function (RED) {
     const node = this;
     getClient(node.config).then(function (client) {
       let nodeCollection;
-      if (node.collection) {
-        nodeCollection = client.db.collection(node.collection);
+
+      if (node.collectionName) {
+        nodeCollection = client.db.collection(node.collectionName);
       }
 
       node.on('input', function (msg) {
-        msg.client = client
+        // msg.client = msg.client.db
         if(nodeCollection){
           msg.collection = nodeCollection;
+        }else{
+          msg.db = client.db
         }
-        node.send(msg);
-
+        node.send(msg)
 
       });
 
