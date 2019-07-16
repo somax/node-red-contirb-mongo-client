@@ -67,8 +67,8 @@ RED.nodes.registerType("mongo-client", {
     <input type="text" id="node-input-configNode" />
   </div>
   <div class="form-row">
-    <label for="node-input-collection"><i class="icon-briefcase"></i> Collection</label>
-    <input type="text" id="node-input-collection" placeholder="collection" />
+    <label for="node-input-collectionName"><i class="icon-briefcase"></i> Collection</label>
+    <input type="text" id="node-input-collectionName" placeholder="collection name" />
   </div>
   <div class="form-row">
   <label for="node-input-name"><i class="icon-tag"></i> Name</label>
@@ -96,7 +96,7 @@ RED.nodes.registerType("mongo-client in", {
     name: {
       value: ""
     },
-    collection: {
+    collectionName: {
       value: ""
     },
   },
@@ -113,7 +113,7 @@ RED.nodes.registerType("mongo-client in", {
     if (mongoConfigNode) {
       serviceName = mongoConfigNode.label();
     }
-    return serviceName + " " + this.collection;
+    return serviceName + " " + this.collectionName;
   },
   labelStyle: function() {
     return this.name ? "node_label_italic" : "";

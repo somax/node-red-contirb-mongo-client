@@ -47,10 +47,7 @@ module.exports = function (RED) {
         "promise": mongodb.MongoClient.connect(config.uri, config.options || {}).then(function (client) {
           const dbName = decodeURIComponent((config.uri.match(/^.*\/([^?]*)\??.*$/) || [])[1] || '');
           const db = client.db(dbName);
-          return {
-            "client": client,
-            "db": db
-          };
+          return client;
         })
       };
     }
@@ -96,11 +93,11 @@ module.exports = function (RED) {
       }
 
       node.on('input', function (msg) {
+        msg.client = client
         if(nodeCollection){
-          node.send({collection: nodeCollection})
-        }else{
-          node.send(client);
+          msg.collection = nodeCollection;
         }
+        node.send(msg);
 
 
       });
