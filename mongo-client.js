@@ -38,7 +38,7 @@ module.exports = function (RED) {
   const mongoPool = {};
 
   function getClient(config) {
-    console.log('=====',{config});
+
     let poolCell = mongoPool['#' + config.deploymentId];
     if (!poolCell) {
       mongoPool['#' + config.deploymentId] = poolCell = {
@@ -77,7 +77,7 @@ module.exports = function (RED) {
   }
 
   RED.nodes.registerType("mongo-client in", function MongoInputNode(n) {
-    console.log({n});
+
     RED.nodes.createNode(this, n);
     this.configNode = n.configNode;
     this.collection = n.collection;
