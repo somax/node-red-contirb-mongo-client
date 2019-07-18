@@ -1,6 +1,11 @@
 # node-red-contrib-mongo-client
 MongoDB client for Node-RED
 
+## install
+
+```js
+npm i node-red-contrib-mongo-client -S
+```
 
 ## Usage
 > Please refer to the [mongoDB node driver 'Collection' documentation](http://mongodb.github.io/node-mongodb-native/3.0/api/Collection.html) to read about each operation.
@@ -14,9 +19,9 @@ MongoDB client for Node-RED
     foo,
     ...
     // If require MongoDb's functions
-    require:['ObjectId','MongoError']
+    require: ['ObjectId','MongoError'],
     // callback function
-    function(_msg, next){
+    callback: function(_msg, next){
         // _msg: OUTPUT object
         // next: the MongoClient node
     }
