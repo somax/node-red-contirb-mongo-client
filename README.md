@@ -6,14 +6,31 @@ MongoDB client for Node-RED
 > Please refer to the [mongoDB node driver 'Collection' documentation](http://mongodb.github.io/node-mongodb-native/3.0/api/Collection.html) to read about each operation.
 
 
-
 ```js
+// input
 {
-    // If the 'collectionName' is provided
-    collection
-    // otherwise
+    // Any INPUT will be passed to OUTPUT
+    payload,
+    foo,
+    ...
+    // If require MongoDb's functions
+    require:['ObjectId','MongoError']
+    // callback function
+    function(_msg, next){
+        // _msg: OUTPUT object
+        // next: the MongoClient node
+    }
+}
+
+
+// OUTPUT object
+{
+    // Any 'require' functions from INPUT can be accessed by: `db.ObjectId(...)`
     db,
-    // Any INPUT will be passed to OUTPUT, and the extra will increase the following parameters:
+    // If the 'collectionName' is provided:
+    collection
+
+    // From INPUT
     payload,
     foo,
     ...
@@ -23,14 +40,16 @@ MongoDB client for Node-RED
 
 ### function node
 ```js
-if(msg.collection){
-    msg.collection
-        .countDocuments()
-        .then( r => node.send({ payload:r }) )
-}else if(msg.db){
-    msg.db.collection('collectionName')
-        .find()
-        .toArray()
-        .then( r => node.send({ payload:r }) )
-}
+msg.collection
+    .countDocuments()
+    .then( r => node.send({ payload:r }) )
+
+const ObjectId = msg.db.ObjectId
+msg.db.collection('collectionName')
+    .find({
+        _id: ObjectId('5d2d8fba4e15c14483a71500')
+    })
+    .toArray()
+    .then( r => node.send({ payload:r }) )
+
 ```

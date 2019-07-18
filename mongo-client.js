@@ -85,6 +85,9 @@ module.exports = function (RED) {
       this.error("missing mongo-client configuration");
       return;
     }
+
+    this.config.options = {'useNewUrlParser':true }
+
     const node = this;
     getClient(node.config).then(function (client) {
       let nodeCollection;
@@ -97,10 +100,24 @@ module.exports = function (RED) {
         // msg.client = msg.client.db
         if(nodeCollection){
           msg.collection = nodeCollection;
-        }else{
-          msg.db = client.db
         }
-        node.send(msg)
+
+        msg.db = client.db
+
+        if(msg.require){
+          msg.require.forEach(k => {
+            msg[k] = mongodb[k]
+          });
+          delete msg.require
+        }
+
+        if(msg.callback && 'function' == typeof msg.callback){
+          let _callback = msg.callback
+          delete msg.callback
+          _callback(msg, node)
+        }else{
+          node.send(msg)
+        }
 
       });
 
