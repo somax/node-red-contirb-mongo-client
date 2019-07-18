@@ -86,8 +86,6 @@ module.exports = function (RED) {
       return;
     }
 
-    this.config.options = {'useNewUrlParser':true }
-
     const node = this;
     getClient(node.config).then(function (client) {
       let nodeCollection;
