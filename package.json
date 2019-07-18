@@ -1,7 +1,7 @@
 {
   "name": "node-red-contrib-mongo-client",
-  "version": "0.2.0",
-  "description": "create mongodb client",
+  "version": "0.2.1",
+  "description": "A mongodb client for Node-Red",
   "dependencies": {
     "mongodb": "^3.2.7"
   },
@@ -11,5 +11,18 @@
     "nodes": {
       "mongo-client": "mongo-client.js"
     }
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/somax/node-red-contrib-mongo-client.git"
+  },
+  "keywords": [
+    "node-red",
+    "mongodb"
+  ],
+  "bugs": {
+    "url": "https://github.com/somax/node-red-contrib-mongo-client/issues"
+  },
+  "homepage": "https://github.com/somax/node-red-contrib-mongo-client#readme"
 }
