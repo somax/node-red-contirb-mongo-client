@@ -44,7 +44,7 @@ msg.collection
     .countDocuments()
     .then( r => node.send({ payload:r }) )
 
-const ObjectId = msg.db.ObjectId
+const ObjectId = msg.ObjectId
 msg.db.collection('collectionName')
     .find({
         _id: ObjectId('5d2d8fba4e15c14483a71500')
