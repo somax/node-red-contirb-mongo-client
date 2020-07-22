@@ -107,46 +107,39 @@ module.exports = function (RED) {
 
         const node = this;
         getClient(node.config)
-            .then(
-                function (client) {
-                    let nodeCollection;
+            .then(function (client) {
+                let nodeCollection;
 
-                    if (node.collectionName) {
-                        nodeCollection = client.db.collection(
-                            node.collectionName
-                        );
+                if (node.collectionName) {
+                    nodeCollection = client.db.collection(node.collectionName);
+                }
+
+                node.on("input", function (msg) {
+                    // msg.client = msg.client.db
+                    if (nodeCollection) {
+                        msg.collection = nodeCollection;
                     }
 
-                    node.on("input", function (msg) {
-                        // msg.client = msg.client.db
-                        if (nodeCollection) {
-                            msg.collection = nodeCollection;
-                        }
+                    msg.db = client.db;
 
-                        msg.db = client.db;
+                    if (msg.require) {
+                        msg.require.forEach((k) => {
+                            msg[k] = mongodb[k];
+                        });
+                        delete msg.require;
+                    }
 
-                        if (msg.require) {
-                            msg.require.forEach((k) => {
-                                msg[k] = mongodb[k];
-                            });
-                            delete msg.require;
-                        }
-
-                        if (msg.callback && "function" == typeof msg.callback) {
-                            let _callback = msg.callback;
-                            delete msg.callback;
-                            _callback(msg, node);
-                        } else {
-                            node.send(msg);
-                        }
-                    });
-                },
-                function (err) {
-                    node.error("mongo error", err);
-                }
-            )
-            .catch((err) => {
-                throw err;
+                    if (msg.callback && "function" == typeof msg.callback) {
+                        let _callback = msg.callback;
+                        delete msg.callback;
+                        _callback(msg, node);
+                    } else {
+                        node.send(msg);
+                    }
+                });
+            })
+            .catch(function (err) {
+                node.error(err.message || "mongo error", err);
             });
 
         node.on("close", function () {
